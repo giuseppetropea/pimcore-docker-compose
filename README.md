@@ -1,11 +1,11 @@
-# Docker-Compose for Pimcore 5
-Simple and easy Docker-Compose configuration for Pimcore 5.
+# Docker-Compose for Pimcore 6
+Simple and easy Docker-Compose configuration for Pimcore 6.
 
 Docker-Compose consists of following images:
  - Redis
  - MariaDB 10.1
- - httpd (Apache 2.4) & PHP-FPM with PHP7.1 and all Pimcore required dependencies (LibreOffice, FFMPEG, Image Libraries, etc)
- - PHP-FPM with PHP7.0 and all Pimcore required dependencies (LibreOffice, Image Libraries, etc) (except FFMPEG)
+ - httpd (Apache 2.4) & PHP-FPM with PHP7.3 and all Pimcore required dependencies (LibreOffice, FFMPEG, Image Libraries, etc)
+ - PHP-FPM with PHP7.3 and all Pimcore required dependencies (LibreOffice, Image Libraries, etc) (except FFMPEG)
  
 ## Getting Started
 ### Requirements
@@ -20,10 +20,14 @@ cd pimcore-docker-compose/
 ### Run Containers
 ```bash
 # initialize and startup containers
-docker-compose up
+docker-compose up -d
 ```
 ### Install Pimcore 
 Choose which package to install https://pimcore.com/docs/5.x/Development_Documentation/Getting_Started/Installation.html#page_Choose-a-package-to-install
+* skeleton
+* demo-basic
+* demo-basic-twig
+* demo-ecommerce
 ```bash
 # get shell in running container
 docker exec -it pimcore-php bash
@@ -33,19 +37,26 @@ docker exec -it pimcore-php bash
 COMPOSER_MEMORY_LIMIT=-1 composer create-project pimcore/<yourpackage> tmp
 mv tmp/* .  
 
-#increase the memory_limit to >= 512MB as required by pimcore-install
+# increase the memory_limit to >= 512MB as required by pimcore-install
 echo 'memory_limit = 512M' >> /usr/local/etc/php/conf.d/docker-php-memlimit.ini;
 service apache2 reload
 
-#run installer
+# run installer
 ./vendor/bin/pimcore-install --mysql-host-socket=db --mysql-username=pimcore --mysql-password=pimcore --mysql-database=pimcore 
+
+# exit from container
+exit
+
+# reboot containers
+docker-compose restart
 
  ```
 
 ### Use
 After the installer is finished, you can open in your Browser:
-* Frontend: http://localhost:2000
-* Backend: http://localhost:2000/admin
+* Frontend: http://localhost
+* Backend: http://localhost/admin
+* Adminer: http://localhost:8080
 
 ### Common Errors 
 
